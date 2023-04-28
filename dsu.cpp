@@ -1,27 +1,41 @@
-int par[100001];
-int ran[100001];
+class UnionFind {
+public:
+    vector<int> parent, rank;
+    int count;
 
-void makeset(int n){
-    for (int i=0;i<=n;i++){
-        par[i]=i;
-        ran[i]=0;
+    UnionFind(int n) : parent(n), rank(n), count(n) {
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+        }
     }
-}
 
-int find(int nd){
-    if (nd==par[nd])return nd;
-    return  par[nd]=find(par[nd]);
-}
-
-void unin(int u,int v){
-    u=find(u);
-    v=find(v);
-    if (ran[u]<ran[v])
-        par[u]=v;
-    else if (ran[u]>ran[v])
-        par[v]=u;
-    else{
-        par[v]=u;
-        ran[u]++;
+    int find(int x) {
+        if (parent[x] != x) 
+            parent[x] = find(parent[x]);
+    
+        return parent[x];
     }
-}
+
+    bool union_(int x, int y) {
+        int rootX = find(x);
+        int rootY = find(y);
+
+        if (rootX == rootY) {
+            return false;
+        }
+
+        if (rank[rootX] < rank[rootY]) {
+            swap(rootX, rootY);
+        }
+
+        parent[rootY] = rootX;
+
+        if (rank[rootX] == rank[rootY]) {
+            rank[rootX]++;
+        }
+
+        count--;
+
+        return true;
+    }
+};
